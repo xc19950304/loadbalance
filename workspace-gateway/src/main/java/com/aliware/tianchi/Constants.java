@@ -16,6 +16,9 @@ public class Constants {
         activeThreadCount.put("small",200);
         activeThreadCount.put("medium",450);
         activeThreadCount.put("large",650);
+        activeThreadCount.put("small_old", 200);
+        activeThreadCount.put("medium_old", 450);
+        activeThreadCount.put("large_old", 650);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.aliware.tianchi;
 
+import com.aliware.tianchi.strategy.EamonStrategy;
 import com.aliware.tianchi.strategy.HardStrategy;
 import com.aliware.tianchi.strategy.RandomWithWeightStategy;
 import com.aliware.tianchi.strategy.UserLoadBalanceStrategy;
@@ -25,7 +26,7 @@ public class UserLoadBalance implements LoadBalance  {
     public <T> Invoker<T> select(List<Invoker<T>> invokers, URL url, Invocation invocation) throws RpcException {
 
         // TODO: 测试其他算法时只需要切换Strategy即可
-        UserLoadBalanceStrategy strategy = RandomWithWeightStategy.getInstance();
+        UserLoadBalanceStrategy strategy = EamonStrategy.getInstance();
         return invokers.get(strategy.select(url, invocation));
 
     }
