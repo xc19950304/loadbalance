@@ -21,19 +21,23 @@ public class TestRequestLimiter implements RequestLimiter {
      */
     @Override
     public boolean tryAcquire(Request request, int activeTaskCount) {
-        //System.out.println("current activeCount:" + activeTaskCount);
-        int total = Thread.currentThread().getThreadGroup().activeCount();
-        //System.out.println("total:" + total);
-
         String env = System.getProperty("quota");
         if (env.equals("small")) {
-            Constants.threadSmall = (total - activeTaskCount);
+            if (Constants.threadSmallTotal == 0) return true;
+            Constants.threadSmall = (Constants.threadSmallTotal - activeTaskCount);
+            if(Constants.threadSmall <= 0)
+                return false;
         } else if (env.equals("medium")) {
-            Constants.threadMedium = (total - activeTaskCount);
+            if (Constants.threadMediumTotal == 0) return true;
+            Constants.threadMedium = (Constants.threadMediumTotal - activeTaskCount);
+            if(Constants.threadMedium <= 0)
+                return false;
         } else {
-            Constants.threadLarge = (total - activeTaskCount);
+            if (Constants.threadLargeTotal == 0) return true;
+            Constants.threadLarge = (Constants.threadLargeTotal - activeTaskCount);
+            if(Constants.threadLarge <= 0)
+                return false;
         }
-
         return true;
     }
 

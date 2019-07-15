@@ -3,9 +3,7 @@ package com.aliware.tianchi.strategy;
 import com.aliware.tianchi.Constants;
 import org.apache.dubbo.common.URL;
 import org.apache.dubbo.rpc.Invocation;
-import org.apache.dubbo.rpc.Invoker;
 
-import java.util.List;
 import java.util.PriorityQueue;
 
 /**
@@ -13,11 +11,11 @@ import java.util.PriorityQueue;
  * Email: eamon@eamon.cc
  * Time: 2019-07-15 16:30:53
  */
-public class HardStrategy implements UserLoadBalanceStrategy{
+public class AResStrategy implements UserLoadBalanceStrategy{
 
-    private static HardStrategy strategy = new HardStrategy();
+    private static AResStrategy strategy = new AResStrategy();
 
-    public static HardStrategy getInstance(){
+    public static AResStrategy getInstance(){
         return strategy;
     }
 
@@ -28,11 +26,11 @@ public class HardStrategy implements UserLoadBalanceStrategy{
         int largeActiveCount = Constants.activeThreadCount.get("large");
 
         PriorityQueue<Double> queue = new PriorityQueue<>((o1, o2) -> o2.compareTo(o1));
-        double k1 = Math.log(Math.random()) / smallActiveCount;
+        double k1 = Math.log(Math.random()) / ( smallActiveCount * 1);
         queue.offer(k1);
-        double k2 = Math.log(Math.random()) / mediumActiveCount;
+        double k2 = Math.log(Math.random()) / ( mediumActiveCount * 1.5 );
         queue.offer(k2);
-        double k3 = Math.log(Math.random()) / largeActiveCount;
+        double k3 = Math.log(Math.random()) / (largeActiveCount * 2);
         queue.offer(k3);
 
         double result = queue.poll();

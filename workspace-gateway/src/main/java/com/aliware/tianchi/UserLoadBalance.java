@@ -1,9 +1,9 @@
 package com.aliware.tianchi;
 
 import com.aliware.tianchi.strategy.EamonStrategy;
-import com.aliware.tianchi.strategy.HardStrategy;
 import com.aliware.tianchi.strategy.RandomWithWeightStategy;
 import com.aliware.tianchi.strategy.UserLoadBalanceStrategy;
+import com.aliware.tianchi.strategy.*;
 import org.apache.dubbo.common.URL;
 import org.apache.dubbo.rpc.Invocation;
 import org.apache.dubbo.rpc.Invoker;
@@ -21,18 +21,12 @@ import java.util.List;
  * 选手需要基于此类实现自己的负载均衡算法
  */
 public class UserLoadBalance implements LoadBalance  {
-
     @Override
     public <T> Invoker<T> select(List<Invoker<T>> invokers, URL url, Invocation invocation) throws RpcException {
 
         // TODO: 测试其他算法时只需要切换Strategy即可
         UserLoadBalanceStrategy strategy = EamonStrategy.getInstance();
         return invokers.get(strategy.select(url, invocation));
-
     }
-
-
-
-
 
 }
