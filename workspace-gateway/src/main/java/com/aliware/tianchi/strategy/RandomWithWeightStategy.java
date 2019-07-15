@@ -22,14 +22,18 @@ public class RandomWithWeightStategy implements UserLoadBalanceStrategy {
 
     @Override
     public int select(URL url, Invocation invocation) {
+
+        int smallActiveCount = Constants.activeThreadCount.get("small");
+        int mediumActiveCount = (int) (Constants.activeThreadCount.get("medium") * 1.5);
+        int largeActiveCount = Constants.activeThreadCount.get("large") * 2;
        Random rand =new Random( );
 
-        int randNumber = rand.nextInt(Constants.activeThreadCount.get("small") + Constants.activeThreadCount.get("medium") + Constants.activeThreadCount.get("large"));
-        if(randNumber < Constants.activeThreadCount.get("small"))
+        int randNumber = rand.nextInt(smallActiveCount + mediumActiveCount + largeActiveCount);
+        if(randNumber < smallActiveCount)
         {
             return 0;
         }
-        else if(randNumber >= Constants.activeThreadCount.get("small") && randNumber < Constants.activeThreadCount.get("small") + Constants.activeThreadCount.get("medium"))
+        else if(randNumber >= smallActiveCount && randNumber < smallActiveCount + mediumActiveCount)
         {
             return 1;
         }
