@@ -26,11 +26,11 @@ public class AResStrategy implements UserLoadBalanceStrategy{
         int largeActiveCount = Constants.activeThreadCount.get("large");
 
         PriorityQueue<Double> queue = new PriorityQueue<>((o1, o2) -> o2.compareTo(o1));
-        double k1 = Math.log(Math.random()) / (smallActiveCount + smallActiveCount/6);
+        double k1 = Math.log(Math.random()) / (smallActiveCount );
         queue.offer(k1);
-        double k2 = Math.log(Math.random()) / (mediumActiveCount + mediumActiveCount/3);
+        double k2 = Math.log(Math.random()) / (mediumActiveCount * 2);
         queue.offer(k2);
-        double k3 = Math.log(Math.random()) / (largeActiveCount + largeActiveCount/2);
+        double k3 = Math.log(Math.random()) / (largeActiveCount * 3);
         queue.offer(k3);
 
         double result = queue.poll();
