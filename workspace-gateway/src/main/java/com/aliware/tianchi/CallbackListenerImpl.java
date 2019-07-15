@@ -14,7 +14,24 @@ public class CallbackListenerImpl implements CallbackListener {
 
     @Override
     public void receiveServerMsg(String msg) {
-        System.out.println("receive msg from server :" + msg);
+        String[] data = msg.split(":");
+        //Integer number = Constants.activeThreadCount.get(data[0]) + 1;
+        //Integer number = Integer.parseInt(data[1]);
+        Constants.activeThreadCount.put(data[0],Integer.parseInt(data[1]));
+/*        switch (data[0])
+        {
+            case "small":
+                number++;
+                Constants.activeThreadCount.put(data[0],data[1]);
+                break;
+            case "medium":
+                Constants.threadMedium++;
+                break;
+            case "large":
+                Constants.threadLarge++;
+                break;
+        }*/
+       System.out.println("receive msg from server 111111:" + msg);
     }
 
 

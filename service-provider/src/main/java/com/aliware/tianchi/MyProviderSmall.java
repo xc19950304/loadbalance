@@ -33,7 +33,7 @@ public class MyProviderSmall {
 
         BaseConfig config = BaseConfig.loadConf();
         // 当前应用配置
-        application.setName("service-provider");
+        application.setName("service-provider-small");
         application.setQosEnable(false);
 
         // 连接注册中心配置

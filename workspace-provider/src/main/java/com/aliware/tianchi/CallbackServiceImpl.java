@@ -25,14 +25,21 @@ public class CallbackServiceImpl implements CallbackService {
                 if (!listeners.isEmpty()) {
                     for (Map.Entry<String, CallbackListener> entry : listeners.entrySet()) {
                         try {
-                            entry.getValue().receiveServerMsg(System.getProperty("quota") + " " + new Date().toString());
+                            String env = System.getProperty("quota");
+                            if (env.equals("small")) {
+                                entry.getValue().receiveServerMsg("small:" + String.valueOf(Constants.threadSmall));
+                            } else if (env.equals("medium")) {
+                                entry.getValue().receiveServerMsg("medium:" + String.valueOf(Constants.threadMedium));
+                            } else {
+                                entry.getValue().receiveServerMsg("large:" + String.valueOf(Constants.threadLarge));
+                            }
                         } catch (Throwable t1) {
                             listeners.remove(entry.getKey());
                         }
                     }
                 }
             }
-        }, 0, 5000);
+        }, 0, 50);
     }
 
     private Timer timer = new Timer();
@@ -46,6 +53,6 @@ public class CallbackServiceImpl implements CallbackService {
     @Override
     public void addListener(String key, CallbackListener listener) {
         listeners.put(key, listener);
-        listener.receiveServerMsg(new Date().toString()); // send notification for change
+//        listener.receiveServerMsg(String.valueOf(Constants.threadLocal.get())); // send notification for change
     }
 }

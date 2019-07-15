@@ -24,7 +24,7 @@ public class MyProviderLarge {
 
         BaseConfig config = BaseConfig.loadConf();
         // 当前应用配置
-        application.setName("service-provider");
+        application.setName("service-provider-large");
         application.setQosEnable(false);
 
         // 连接注册中心配置
