@@ -25,8 +25,6 @@ public class TestServerFilter implements Filter {
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
         try{
             Result result = invoker.invoke(invocation);
-            Map<String, String> attachments = result.getAttachments();
-            System.out.println("server请求invoke:value:"+result.getValue());
             return result;
         }catch (Exception e){
             throw e;
@@ -46,7 +44,6 @@ public class TestServerFilter implements Filter {
         }else {
             com.aliware.tianchi.Constants.threadLargeTotal=total;
         }
-        System.out.println("serverOnResponseResult:"+ result.getValue() +",invoker.getUrl():"+invoker.getUrl()+",invocation.getMethodName():"+invocation.getMethodName());
         return result;
     }
 
