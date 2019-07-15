@@ -324,3 +324,5 @@ tags
 [._]*.un~
 .flattened-pom.xml
 
+workspace-gateway/src/main/java/com/aliware/tianchi/UserLoadBalance.java
+
