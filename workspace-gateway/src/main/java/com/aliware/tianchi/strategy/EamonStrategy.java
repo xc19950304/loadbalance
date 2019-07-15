@@ -62,7 +62,7 @@ public class EamonStrategy implements UserLoadBalanceStrategy {
 
     private int largeWeight = LARGE_INIT_WEIGHT;
 
-    private static final int GRAB_NUM = (int)(TOTAL_INIT_WEIGHT * 0.02 / 3);
+    private static final int GRAB_NUM = (int)(TOTAL_INIT_WEIGHT * 0.03 / 3);
 
     private static final int ALPHA = 9;
 
@@ -106,7 +106,7 @@ public class EamonStrategy implements UserLoadBalanceStrategy {
                                     " D_LARGE: " + (numberMap.get(NUM_LARGE) - numberMap.get(NUM_LARGE_OLD)) +
                                     " D_TOTAL: " + (numberMap.get(NUM_TOTAL) - numberMap.get(NUM_TOTAL_OLD))
                     );
-                    System.out.println(GRAB_NUM + " " + smallWeight + " " + mediumWeight + " " + largeWeight);
+                    System.out.println("GRAB_NUM: " + GRAB_NUM + " GATE_NUM: " + GRAB_NUM * ALPHA + " SMALL_WEIGHT: " + smallWeight + " MEDIUM_WEIGHT: " + mediumWeight + " LARGE_WEIGHT: " + largeWeight);
                     numberMap.put(NUM_SMALL_OLD, numberMap.get(NUM_SMALL));
                     numberMap.put(NUM_MEDIUM_OLD, numberMap.get(NUM_MEDIUM));
                     numberMap.put(NUM_LARGE_OLD, numberMap.get(NUM_LARGE));
