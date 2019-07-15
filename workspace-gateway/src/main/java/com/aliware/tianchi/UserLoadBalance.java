@@ -1,9 +1,6 @@
 package com.aliware.tianchi;
 
-import com.aliware.tianchi.strategy.AResStrategy;
-import com.aliware.tianchi.strategy.BasicStrategy;
-import com.aliware.tianchi.strategy.RandomStrategy;
-import com.aliware.tianchi.strategy.UserLoadBalanceStrategy;
+import com.aliware.tianchi.strategy.*;
 import org.apache.dubbo.common.URL;
 import org.apache.dubbo.rpc.Invocation;
 import org.apache.dubbo.rpc.Invoker;
@@ -25,7 +22,7 @@ public class UserLoadBalance implements LoadBalance  {
     public <T> Invoker<T> select(List<Invoker<T>> invokers, URL url, Invocation invocation) throws RpcException {
 
         // TODO: 测试其他算法时只需要切换Strategy即可
-        UserLoadBalanceStrategy strategy = AResStrategy.getInstance();
+        UserLoadBalanceStrategy strategy = RandomWithWeightStategy.getInstance();
         return invokers.get(strategy.select(url, invocation));
     }
 
