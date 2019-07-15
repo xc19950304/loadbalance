@@ -64,9 +64,11 @@ public class EamonStrategy implements UserLoadBalanceStrategy {
 
     private static final int GRAB_NUM = (int)(TOTAL_INIT_WEIGHT * 0.02 / 3);
 
-    private static final int ALPHA = 8;
+    private static final int ALPHA = 9;
 
     private HashMap<Integer, Integer> numberMap = new HashMap<>();
+
+    private static final boolean IS_DEBUG = Boolean.parseBoolean(System.getProperty("debug"));
 
     private EamonStrategy() {
         numberMap.put(NUM_SMALL, 0);
@@ -91,22 +93,25 @@ public class EamonStrategy implements UserLoadBalanceStrategy {
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             public void run() {
-                numberMap.put(NUM_TOTAL, numberMap.get(NUM_SMALL) + numberMap.get(NUM_MEDIUM) + numberMap.get(NUM_LARGE));
-                System.out.println(
-                                " NUM_SMALL: " + numberMap.get(NUM_SMALL) +
-                                " NUM_MEDIUM: " + numberMap.get(NUM_MEDIUM) +
-                                " NUM_LARGE: " + numberMap.get(NUM_LARGE) +
-                                " NUM_TOTAL: " + numberMap.get(NUM_TOTAL) +
-                                " D_SMALL: " + (numberMap.get(NUM_SMALL) - numberMap.get(NUM_SMALL_OLD)) +
-                                " D_MEDIUM: " + (numberMap.get(NUM_MEDIUM) - numberMap.get(NUM_MEDIUM_OLD)) +
-                                " D_LARGE: " + (numberMap.get(NUM_LARGE) - numberMap.get(NUM_LARGE_OLD)) +
-                                " D_TOTAL: " + (numberMap.get(NUM_TOTAL) - numberMap.get(NUM_TOTAL_OLD))
-                );
-                System.out.println(GRAB_NUM + " " + smallWeight + " " + mediumWeight + " " + largeWeight);
-                numberMap.put(NUM_SMALL_OLD, numberMap.get(NUM_SMALL));
-                numberMap.put(NUM_MEDIUM_OLD, numberMap.get(NUM_MEDIUM));
-                numberMap.put(NUM_LARGE_OLD, numberMap.get(NUM_LARGE));
-                numberMap.put(NUM_TOTAL_OLD, numberMap.get(NUM_TOTAL));
+
+                if (IS_DEBUG){
+                    numberMap.put(NUM_TOTAL, numberMap.get(NUM_SMALL) + numberMap.get(NUM_MEDIUM) + numberMap.get(NUM_LARGE));
+                    System.out.println(
+                            " NUM_SMALL: " + numberMap.get(NUM_SMALL) +
+                                    " NUM_MEDIUM: " + numberMap.get(NUM_MEDIUM) +
+                                    " NUM_LARGE: " + numberMap.get(NUM_LARGE) +
+                                    " NUM_TOTAL: " + numberMap.get(NUM_TOTAL) +
+                                    " D_SMALL: " + (numberMap.get(NUM_SMALL) - numberMap.get(NUM_SMALL_OLD)) +
+                                    " D_MEDIUM: " + (numberMap.get(NUM_MEDIUM) - numberMap.get(NUM_MEDIUM_OLD)) +
+                                    " D_LARGE: " + (numberMap.get(NUM_LARGE) - numberMap.get(NUM_LARGE_OLD)) +
+                                    " D_TOTAL: " + (numberMap.get(NUM_TOTAL) - numberMap.get(NUM_TOTAL_OLD))
+                    );
+                    System.out.println(GRAB_NUM + " " + smallWeight + " " + mediumWeight + " " + largeWeight);
+                    numberMap.put(NUM_SMALL_OLD, numberMap.get(NUM_SMALL));
+                    numberMap.put(NUM_MEDIUM_OLD, numberMap.get(NUM_MEDIUM));
+                    numberMap.put(NUM_LARGE_OLD, numberMap.get(NUM_LARGE));
+                    numberMap.put(NUM_TOTAL_OLD, numberMap.get(NUM_TOTAL));
+                }
 
                 weightChange();
 
@@ -182,7 +187,7 @@ public class EamonStrategy implements UserLoadBalanceStrategy {
         return targetMachine;
     }
 
-    private synchronized void write(int smallWeight, int mediumWeight, int largeWeight){
+    private void write(int smallWeight, int mediumWeight, int largeWeight){
         this.smallWeight = smallWeight;
         this.mediumWeight = mediumWeight;
         this.largeWeight = largeWeight;

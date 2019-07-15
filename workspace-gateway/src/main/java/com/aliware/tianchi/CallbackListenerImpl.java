@@ -15,7 +15,7 @@ public class CallbackListenerImpl implements CallbackListener {
 
     private Map<String, ReceiveItem> receiveItemMap = new HashMap<>();
 
-    private static final boolean IS_DEBUG = true;
+    private static final boolean IS_DEBUG = Boolean.parseBoolean(System.getProperty("debug"));
 
     public CallbackListenerImpl() {
         if (IS_DEBUG) {
