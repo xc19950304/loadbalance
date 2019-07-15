@@ -1,12 +1,16 @@
 package com.aliware.tianchi;
 
 import org.apache.dubbo.common.Constants;
+import org.apache.dubbo.common.URL;
 import org.apache.dubbo.common.extension.Activate;
 import org.apache.dubbo.rpc.Filter;
 import org.apache.dubbo.rpc.Invocation;
 import org.apache.dubbo.rpc.Invoker;
 import org.apache.dubbo.rpc.Result;
 import org.apache.dubbo.rpc.RpcException;
+
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author daofeng.xjf
@@ -17,13 +21,12 @@ import org.apache.dubbo.rpc.RpcException;
  */
 @Activate(group = Constants.PROVIDER)
 public class TestServerFilter implements Filter {
-    //long startTime = 0;
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
-
         try{
-            //startTime = System.currentTimeMillis();
             Result result = invoker.invoke(invocation);
+            Map<String, String> attachments = result.getAttachments();
+            System.out.println("server请求invoke:value:"+result.getValue());
             return result;
         }catch (Exception e){
             throw e;
@@ -33,9 +36,17 @@ public class TestServerFilter implements Filter {
 
     @Override
     public Result onResponse(Result result, Invoker<?> invoker, Invocation invocation) {
-        //long endTime = System.currentTimeMillis();
-       // System.out.println( "request time : " +(endTime - startTime));
-
+        URL url=invoker.getUrl();
+        int port = url.getPort();
+        int total=url.getParameter("threads",0);
+        if (port==20880){
+            com.aliware.tianchi.Constants.threadSmallTotal=total;
+        }else if(port==20870){
+            com.aliware.tianchi.Constants.threadMediumTotal=total;
+        }else {
+            com.aliware.tianchi.Constants.threadLargeTotal=total;
+        }
+        System.out.println("serverOnResponseResult:"+ result.getValue() +",invoker.getUrl():"+invoker.getUrl()+",invocation.getMethodName():"+invocation.getMethodName());
         return result;
     }
 
