@@ -1,0 +1,48 @@
+package com.aliware.tianchi.strategy;
+
+import com.aliware.tianchi.Constants;
+import org.apache.dubbo.common.URL;
+import org.apache.dubbo.rpc.Invocation;
+import org.apache.dubbo.rpc.Invoker;
+
+import java.util.List;
+import java.util.PriorityQueue;
+
+/**
+ * Author: eamon
+ * Email: eamon@eamon.cc
+ * Time: 2019-07-15 16:30:53
+ */
+public class HardStrategy implements UserLoadBalanceStrategy{
+
+    private static HardStrategy strategy = new HardStrategy();
+
+    public static HardStrategy getInstance(){
+        return strategy;
+    }
+
+    @Override
+    public int select(URL url, Invocation invocation) {
+        int smallActiveCount = Constants.activeThreadCount.get("small");
+        int mediumActiveCount = Constants.activeThreadCount.get("medium");
+        int largeActiveCount = Constants.activeThreadCount.get("large");
+
+        PriorityQueue<Double> queue = new PriorityQueue<>((o1, o2) -> o2.compareTo(o1));
+        double k1 = Math.log(Math.random()) / smallActiveCount;
+        queue.offer(k1);
+        double k2 = Math.log(Math.random()) / mediumActiveCount;
+        queue.offer(k2);
+        double k3 = Math.log(Math.random()) / largeActiveCount;
+        queue.offer(k3);
+
+        double result = queue.poll();
+
+        if (result == k1) {
+            return 0;
+        }
+        if (result == k2) {
+            return 1;
+        }
+        return 2;
+    }
+}
