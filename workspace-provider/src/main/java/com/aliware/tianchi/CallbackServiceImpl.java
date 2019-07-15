@@ -39,7 +39,7 @@ public class CallbackServiceImpl implements CallbackService {
                     }
                 }
             }
-        }, 0, 50);
+        }, 0, 10);
     }
 
     private Timer timer = new Timer();
