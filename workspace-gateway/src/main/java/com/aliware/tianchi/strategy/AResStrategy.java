@@ -3,9 +3,7 @@ package com.aliware.tianchi.strategy;
 import com.aliware.tianchi.Constants;
 import org.apache.dubbo.common.URL;
 import org.apache.dubbo.rpc.Invocation;
-import org.apache.dubbo.rpc.Invoker;
 
-import java.util.List;
 import java.util.PriorityQueue;
 
 /**
@@ -13,11 +11,11 @@ import java.util.PriorityQueue;
  * Email: eamon@eamon.cc
  * Time: 2019-07-15 16:30:53
  */
-public class HardStrategy implements UserLoadBalanceStrategy{
+public class AResStrategy implements UserLoadBalanceStrategy{
 
-    private static HardStrategy strategy = new HardStrategy();
+    private static AResStrategy strategy = new AResStrategy();
 
-    public static HardStrategy getInstance(){
+    public static AResStrategy getInstance(){
         return strategy;
     }
 
