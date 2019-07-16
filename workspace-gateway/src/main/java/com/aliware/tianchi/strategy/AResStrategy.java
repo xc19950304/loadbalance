@@ -56,14 +56,11 @@ public class AResStrategy extends AbstractStrategy {
         double result = queue.poll();
 
         if (result == k1) {
-            LOGGER.info(new Date().getTime() + ":small:" + (Constants.activeThreadCount.get("small") + ":" + Constants.longAdderSmall.longValue()));
             return 0;
         }
         if (result == k2) {
-            LOGGER.info(new Date().getTime() + ":medium:" + Constants.activeThreadCount.get("medium") + ":" + Constants.longAdderMedium.longValue());
             return 1;
         }
-        LOGGER.info(new Date().getTime() + ":large:" + (Constants.activeThreadCount.get("large") + ":" + Constants.longAdderLarge.longValue()));
         return 2;
     }
 }

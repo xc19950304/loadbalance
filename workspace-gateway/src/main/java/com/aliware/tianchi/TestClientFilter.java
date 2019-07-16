@@ -1,9 +1,14 @@
 package com.aliware.tianchi;
 
+import com.aliware.tianchi.strategy.AResStrategy;
 import org.apache.dubbo.common.Constants;
 import org.apache.dubbo.common.URL;
 import org.apache.dubbo.common.extension.Activate;
+import org.apache.dubbo.common.logger.Logger;
+import org.apache.dubbo.common.logger.LoggerFactory;
 import org.apache.dubbo.rpc.*;
+
+import java.util.Date;
 
 import static com.aliware.tianchi.Constants.*;
 
@@ -16,6 +21,8 @@ import static com.aliware.tianchi.Constants.*;
  */
 @Activate(group = Constants.CONSUMER)
 public class TestClientFilter implements Filter {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestClientFilter.class);
+
     //long startTime = 0;
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
@@ -25,10 +32,13 @@ public class TestClientFilter implements Filter {
             int port = url.getPort();
             if (port == 20880) {
                 longAdderSmall.decrement();
+                LOGGER.info(new Date().getTime() + ":small:" + (com.aliware.tianchi.Constants.activeThreadCount.get("small") + ":" + com.aliware.tianchi.Constants.longAdderSmall.longValue()));
             } else if (port == 20870) {
                 longAdderMedium.decrement();
+                LOGGER.info(new Date().getTime() + ":medium:" + com.aliware.tianchi.Constants.activeThreadCount.get("medium") + ":" + com.aliware.tianchi.Constants.longAdderMedium.longValue());
             } else {
                 longAdderLarge.decrement();
+                LOGGER.info(new Date().getTime() + ":large:" + (com.aliware.tianchi.Constants.activeThreadCount.get("large") + ":" + com.aliware.tianchi.Constants.longAdderLarge.longValue()));
             }
             Result result = invoker.invoke(invocation);
             return result;

@@ -45,13 +45,10 @@ public class RandomWithWeightStategy extends AbstractStrategy {
 
         int randNumber = rand.nextInt(smallActiveCount + mediumActiveCount + largeActiveCount);
         if (randNumber < smallActiveCount) {
-            System.out.println(new Date().getTime() + ":small:" + (Constants.activeThreadCount.get("small") + ":" + Constants.longAdderSmall.longValue()));
             return 0;
         } else if (randNumber >= smallActiveCount && randNumber < smallActiveCount + mediumActiveCount) {
-            System.out.println(new Date().getTime() + ":medium:" + Constants.activeThreadCount.get("medium") + ":" + Constants.longAdderMedium.longValue());
             return 1;
         } else {
-            System.out.println(new Date().getTime() + ":large:" + (Constants.activeThreadCount.get("large") + ":" + Constants.longAdderLarge.longValue()));
             return 2;
         }
     }
