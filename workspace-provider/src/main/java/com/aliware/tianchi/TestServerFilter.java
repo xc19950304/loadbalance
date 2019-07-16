@@ -21,6 +21,7 @@ import java.util.Properties;
  */
 @Activate(group = Constants.PROVIDER)
 public class TestServerFilter implements Filter {
+    private static  boolean init = false;
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
         try{
@@ -34,17 +35,19 @@ public class TestServerFilter implements Filter {
 
     @Override
     public Result onResponse(Result result, Invoker<?> invoker, Invocation invocation) {
-        URL url=invoker.getUrl();
-        int port = url.getPort();
-        int total=url.getParameter("threads",0);
-        if (port==20880){
-            com.aliware.tianchi.Constants.threadSmallTotal=total;
-        }else if(port==20870){
-            com.aliware.tianchi.Constants.threadMediumTotal=total;
-        }else {
-            com.aliware.tianchi.Constants.threadLargeTotal=total;
+        if(!init){
+            URL url=invoker.getUrl();
+            int port = url.getPort();
+            int total=url.getParameter("threads",0);
+            if (port==20880){
+                com.aliware.tianchi.Constants.threadSmallTotal=total;
+            }else if(port==20870){
+                com.aliware.tianchi.Constants.threadMediumTotal=total;
+            }else {
+                com.aliware.tianchi.Constants.threadLargeTotal=total;
+            }
+            init=true;
         }
-        System.out.println(result.getValue());
         return result;
     }
 
