@@ -22,7 +22,8 @@ public class UserLoadBalance implements LoadBalance  {
     public <T> Invoker<T> select(List<Invoker<T>> invokers, URL url, Invocation invocation) throws RpcException {
 
         // TODO: 测试其他算法时只需要切换Strategy即可
-        UserLoadBalanceStrategy strategy = RandomWithWeightStategy.getInstance();
+        UserLoadBalanceStrategy strategy = AResStrategy.getInstance("client");
+//        UserLoadBalanceStrategy strategy = RandomWithWeightStategy.getInstance("client");
         return invokers.get(strategy.select(url, invocation));
     }
 
