@@ -18,28 +18,28 @@ import java.util.concurrent.ConcurrentHashMap;
 public class CallbackServiceImpl implements CallbackService {
 
     public CallbackServiceImpl() {
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if (!listeners.isEmpty()) {
-                    for (Map.Entry<String, CallbackListener> entry : listeners.entrySet()) {
-                        try {
-                            String env = System.getProperty("quota");
-
-                            if (env.equals("small")) {
-                                entry.getValue().receiveServerMsg("small:" + Constants.threadSmall);
-                            } else if (env.equals("medium")) {
-                                entry.getValue().receiveServerMsg("medium:" + Constants.threadMedium);
-                            } else {
-                                entry.getValue().receiveServerMsg("large:" + Constants.threadLarge);
-                            }
-                        } catch (Throwable t1) {
-                            listeners.remove(entry.getKey());
-                        }
-                    }
-                }
-            }
-        }, 0, 10);
+//        timer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                if (!listeners.isEmpty()) {
+//                    for (Map.Entry<String, CallbackListener> entry : listeners.entrySet()) {
+//                        try {
+//                            String env = System.getProperty("quota");
+//
+//                            if (env.equals("small")) {
+//                                entry.getValue().receiveServerMsg("small:" + Constants.threadSmall);
+//                            } else if (env.equals("medium")) {
+//                                entry.getValue().receiveServerMsg("medium:" + Constants.threadMedium);
+//                            } else {
+//                                entry.getValue().receiveServerMsg("large:" + Constants.threadLarge);
+//                            }
+//                        } catch (Throwable t1) {
+//                            listeners.remove(entry.getKey());
+//                        }
+//                    }
+//                }
+//            }
+//        }, 0, 10);
     }
 
     private Timer timer = new Timer();
