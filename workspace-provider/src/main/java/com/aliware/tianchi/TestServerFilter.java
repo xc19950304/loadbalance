@@ -44,6 +44,7 @@ public class TestServerFilter implements Filter {
         }else {
             com.aliware.tianchi.Constants.threadLargeTotal=total;
         }
+        System.out.println(result.getValue());
         return result;
     }
 

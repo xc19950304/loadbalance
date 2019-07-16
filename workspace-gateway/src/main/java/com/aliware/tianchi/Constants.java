@@ -2,6 +2,7 @@ package com.aliware.tianchi;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.LongAdder;
 
 public class Constants {
 //    public static final ThreadLocal<Integer>  threadLocal = new ThreadLocal();
@@ -9,16 +10,18 @@ public class Constants {
     public static  Integer threadMedium = 0;
     public static  Integer threadLarge = 0;*/
 
-    public static Map<String,Integer> activeThreadCount = new HashMap<>();
+    public static Map<String, Integer> activeThreadCount = new HashMap<>();
+    public static LongAdder longAdderLarge = new LongAdder();
+    public static LongAdder longAdderMedium = new LongAdder();
+    public static LongAdder longAdderSmall = new LongAdder();
 
-    static
-    {
-        activeThreadCount.put("small",200);
-        activeThreadCount.put("medium",450);
-        activeThreadCount.put("large",650);
-        activeThreadCount.put("small_old", 200);
-        activeThreadCount.put("medium_old", 450);
-        activeThreadCount.put("large_old", 650);
+    static {
+        longAdderLarge.add(650);
+        longAdderMedium.add(450);
+        longAdderSmall.add(200);
+        activeThreadCount.put("small", 200);
+        activeThreadCount.put("medium", 450);
+        activeThreadCount.put("large", 650);
     }
 
 }

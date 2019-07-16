@@ -5,22 +5,24 @@ import org.apache.dubbo.common.URL;
 import org.apache.dubbo.rpc.Invocation;
 
 import java.util.Date;
-import java.util.PriorityQueue;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Author: eamon
  * Email: eamon@eamon.cc
- * Time: 2019-07-15 16:30:53
+ * Time: 2019-07-15 16:46:35
  */
-public class AResStrategy extends AbstractStrategy {
+public class RandomWithWeightStategy extends AbstractStrategy {
+    static {
+        strategy = new RandomWithWeightStategy();
+    }
 
-    private static AResStrategy strategy = new AResStrategy();
-
-    public static AResStrategy getInstance() {
+    public static UserLoadBalanceStrategy getInstance() {
         return strategy;
     }
 
-    public static AResStrategy getInstance(String dataFrom) {
+    public static UserLoadBalanceStrategy getInstance(String dataFrom) {
         strategy.dataFrom = dataFrom;
         return strategy;
     }
@@ -41,25 +43,17 @@ public class AResStrategy extends AbstractStrategy {
             largeActiveCount = Constants.activeThreadCount.get("large");
         }
 
-        PriorityQueue<Double> queue = new PriorityQueue<>((o1, o2) -> o2.compareTo(o1));
-        double k1 = Math.log(rand.nextDouble()) / (smallActiveCount * 1);
-        queue.offer(k1);
-        double k2 = Math.log(rand.nextDouble()) / (mediumActiveCount * 1.5);
-        queue.offer(k2);
-        double k3 = Math.log(rand.nextDouble()) / (largeActiveCount * 2);
-        queue.offer(k3);
-
-        double result = queue.poll();
-
-        if (result == k1) {
+        int randNumber = rand.nextInt(smallActiveCount + mediumActiveCount + largeActiveCount);
+        if (randNumber < smallActiveCount) {
             System.out.println(new Date().getTime() + ":small:" + (Constants.activeThreadCount.get("small") + ":" + Constants.longAdderSmall.longValue()));
             return 0;
-        }
-        if (result == k2) {
+        } else if (randNumber >= smallActiveCount && randNumber < smallActiveCount + mediumActiveCount) {
             System.out.println(new Date().getTime() + ":medium:" + Constants.activeThreadCount.get("medium") + ":" + Constants.longAdderMedium.longValue());
             return 1;
+        } else {
+            System.out.println(new Date().getTime() + ":large:" + (Constants.activeThreadCount.get("large") + ":" + Constants.longAdderLarge.longValue()));
+            return 2;
         }
-        System.out.println(new Date().getTime() + ":large:" + (Constants.activeThreadCount.get("large") + ":" + Constants.longAdderLarge.longValue()));
-        return 2;
     }
+
 }
