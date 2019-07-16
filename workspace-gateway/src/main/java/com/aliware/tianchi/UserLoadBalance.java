@@ -23,7 +23,7 @@ public class UserLoadBalance implements LoadBalance  {
 
         // TODO: 测试其他算法时只需要切换Strategy即可
         UserLoadBalanceStrategy strategy = AResStrategy.getInstance("client");
-//        UserLoadBalanceStrategy strategy = RandomWithWeightStategy.getInstance("client");
+//       UserLoadBalanceStrategy strategy = DynamicWeightStrategy.getInstance();
         return invokers.get(strategy.select(url, invocation));
     }
 
