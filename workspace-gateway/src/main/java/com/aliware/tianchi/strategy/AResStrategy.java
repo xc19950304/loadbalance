@@ -27,13 +27,18 @@ public class AResStrategy extends AbstractStrategy {
 
     @Override
     public int select(URL url, Invocation invocation) {
-        int smallActiveCount = Constants.activeThreadCount.get("small");
-        int mediumActiveCount = Constants.activeThreadCount.get("medium");
-        int largeActiveCount = Constants.activeThreadCount.get("large");
+        int smallActiveCount;
+        int mediumActiveCount;
+        int largeActiveCount;
+
         if (dataFrom.equals("client")) {
             smallActiveCount = (int) Constants.longAdderSmall.longValue();
             mediumActiveCount = (int) Constants.longAdderMedium.longValue();
             largeActiveCount = (int) Constants.longAdderLarge.longValue();
+        } else {
+            smallActiveCount = Constants.activeThreadCount.get("small");
+            mediumActiveCount = Constants.activeThreadCount.get("medium");
+            largeActiveCount = Constants.activeThreadCount.get("large");
         }
 
         PriorityQueue<Double> queue = new PriorityQueue<>((o1, o2) -> o2.compareTo(o1));
