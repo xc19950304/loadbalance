@@ -14,11 +14,11 @@ import java.util.TimerTask;
  * Email: eamon@eamon.cc
  * Time: 2019-07-15 16:46:35
  */
-public class EamonStrategy implements UserLoadBalanceStrategy {
+public class DynamicWeightStrategy implements UserLoadBalanceStrategy {
 
-    private static EamonStrategy strategy = new EamonStrategy();
+    private static DynamicWeightStrategy strategy = new DynamicWeightStrategy();
 
-    public static EamonStrategy getInstance() {
+    public static DynamicWeightStrategy getInstance() {
         return strategy;
     }
 
@@ -70,7 +70,7 @@ public class EamonStrategy implements UserLoadBalanceStrategy {
 
     private static final boolean IS_DEBUG = Boolean.parseBoolean(System.getProperty("debug"));
 
-    private EamonStrategy() {
+    private DynamicWeightStrategy() {
         numberMap.put(NUM_SMALL, 0);
         numberMap.put(NUM_MEDIUM, 0);
         numberMap.put(NUM_LARGE, 0);
