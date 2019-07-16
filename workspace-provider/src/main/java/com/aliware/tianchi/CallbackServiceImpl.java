@@ -50,7 +50,7 @@ public class CallbackServiceImpl implements CallbackService {
                             try {
                                 String env = System.getProperty("quota");
                                 if (env.equals("small")) {
-                                    entry.getValue().receiveServerMsg("small:" + Constants.threadLargeTotal);
+                                    entry.getValue().receiveServerMsg("small:" + Constants.threadSmallTotal);
                                 } else if (env.equals("medium")) {
                                     entry.getValue().receiveServerMsg("medium:" + Constants.threadMediumTotal);
                                 } else {

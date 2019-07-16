@@ -33,7 +33,7 @@ public class UserLoadBalance implements LoadBalance {
             //System.out.println("随机算法");
         }
         else {
-            strategy = AResStrategy.getInstance();
+            strategy = AResStrategy.getInstance("client");
             //System.out.println("AResStrategy权重算法");
         }
 

@@ -26,6 +26,10 @@ public class TestClientFilter implements Filter {
     //long startTime = 0;
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
+        if(!threadCountInit){
+            Result result = invoker.invoke(invocation);
+            return result;
+        }
         try {
             //startTime = System.currentTimeMillis();
             URL url = invoker.getUrl();
