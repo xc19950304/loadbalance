@@ -163,8 +163,8 @@ public class DynamicWeightStrategy1 extends AbstractStrategy {
 
         // 低活跃门槛保护
         smallWeightLocal = (int) (smallWeightLocal * ratioA(Constants.longAdderSmall.longValue(), ALPHA_MAX * smallWeightLocal / (double)largeWeightLocal, ALPHA_LOW* smallWeightLocal / (double)largeWeightLocal));
-        mediumWeightLocal = (int) (mediumWeightLocal * ratioA(Constants.longAdderSmall.longValue(), ALPHA_MAX * mediumWeightLocal / (double)largeWeightLocal, ALPHA_LOW* mediumWeightLocal / (double)largeWeightLocal));
-        largeWeightLocal = (int) (largeWeightLocal * ratioA(Constants.longAdderSmall.longValue(), ALPHA_MAX , ALPHA_LOW));
+        mediumWeightLocal = (int) (mediumWeightLocal * ratioA(Constants.longAdderMedium.longValue(), ALPHA_MAX * mediumWeightLocal / (double)largeWeightLocal, ALPHA_LOW* mediumWeightLocal / (double)largeWeightLocal));
+        largeWeightLocal = (int) (largeWeightLocal * ratioA(Constants.longAdderLarge.longValue(), ALPHA_MAX , ALPHA_LOW));
 
 
         int targetMachine = 2;
