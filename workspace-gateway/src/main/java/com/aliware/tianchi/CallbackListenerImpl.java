@@ -18,19 +18,19 @@ public class CallbackListenerImpl implements CallbackListener {
     private static final boolean IS_DEBUG = Boolean.parseBoolean(System.getProperty("debug"));
 
     public CallbackListenerImpl() {
-        if (IS_DEBUG) {
-            receiveItemMap.put("small", new ReceiveItem("", new Date()));
-            receiveItemMap.put("medium", new ReceiveItem("", new Date()));
-            receiveItemMap.put("large", new ReceiveItem("", new Date()));
-            Timer timer = new Timer();
-            timer.scheduleAtFixedRate(new TimerTask() {
-                public void run() {
-                    System.err.println("small: " + receiveItemMap.get("small").toString());
-                    System.err.println("medium: " + receiveItemMap.get("medium").toString());
-                    System.err.println("large: " + receiveItemMap.get("large").toString());
-                }
-            }, 500, 500);
-        }
+//        if (IS_DEBUG) {
+//            receiveItemMap.put("small", new ReceiveItem("", new Date()));
+//            receiveItemMap.put("medium", new ReceiveItem("", new Date()));
+//            receiveItemMap.put("large", new ReceiveItem("", new Date()));
+//            Timer timer = new Timer();
+//            timer.scheduleAtFixedRate(new TimerTask() {
+//                public void run() {
+//                    System.err.println("small: " + receiveItemMap.get("small").toString());
+//                    System.err.println("medium: " + receiveItemMap.get("medium").toString());
+//                    System.err.println("large: " + receiveItemMap.get("large").toString());
+//                }
+//            }, 500, 500);
+//        }
     }
 
     @Override
