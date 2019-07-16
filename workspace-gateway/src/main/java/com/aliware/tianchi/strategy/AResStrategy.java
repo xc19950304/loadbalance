@@ -45,15 +45,11 @@ public class AResStrategy extends AbstractStrategy {
             largeActiveCount = Constants.activeThreadCount.get("large");
         }
 
-        PriorityQueue<Double> queue = new PriorityQueue<>((o1, o2) -> o2.compareTo(o1));
         double k1 = Math.log(rand.nextDouble()) / (smallActiveCount * 1);
-        queue.offer(k1);
         double k2 = Math.log(rand.nextDouble()) / (mediumActiveCount * 1.5);
-        queue.offer(k2);
         double k3 = Math.log(rand.nextDouble()) / (largeActiveCount * 2);
-        queue.offer(k3);
 
-        double result = queue.poll();
+        double result = Math.max(Math.max(k1, k2),k3);
 
         if (result == k1) {
             return 0;

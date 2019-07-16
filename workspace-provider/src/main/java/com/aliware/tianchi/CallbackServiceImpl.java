@@ -40,9 +40,35 @@ public class CallbackServiceImpl implements CallbackService {
 //                }
 //            }
 //        }, 0, 10);
+
+        sumThreadTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (!listeners.isEmpty()) {
+                    for (Map.Entry<String, CallbackListener> entry : listeners.entrySet()) {
+                        if("callbacklistenerforsum".equals(entry.getKey())) {
+                            try {
+                                String env = System.getProperty("quota");
+                                if (env.equals("small")) {
+                                    entry.getValue().receiveServerMsg("small:" + Constants.threadLargeTotal);
+                                } else if (env.equals("medium")) {
+                                    entry.getValue().receiveServerMsg("medium:" + Constants.threadMediumTotal);
+                                } else {
+                                    entry.getValue().receiveServerMsg("large:" + Constants.threadLargeTotal);
+                                }
+                            } catch (Throwable t1) {
+                                listeners.remove(entry.getKey());
+                            }
+                        }
+                    }
+                }
+
+            }
+        }, 0,5000);
     }
 
     private Timer timer = new Timer();
+    private Timer sumThreadTimer = new Timer();
 
     /**
      * key: listener type
