@@ -158,8 +158,8 @@ public class DynamicWeightStrategy implements UserLoadBalanceStrategy {
 
         // 低活跃门槛保护
         smallWeightLocal = (int) (smallWeightLocal * ratioA(Constants.activeThreadCount.get("small"), ALPHA_MAX * smallWeightLocal / (double)largeWeightLocal, ALPHA_LOW* smallWeightLocal / (double)largeWeightLocal));
-        mediumWeightLocal = (int) (mediumWeightLocal * ratioA(Constants.activeThreadCount.get("small"), ALPHA_MAX * mediumWeightLocal / (double)largeWeightLocal, ALPHA_LOW* mediumWeightLocal / (double)largeWeightLocal));
-        largeWeightLocal = (int) (largeWeightLocal * ratioA(Constants.activeThreadCount.get("small"), ALPHA_MAX , ALPHA_LOW));
+        mediumWeightLocal = (int) (mediumWeightLocal * ratioA(Constants.activeThreadCount.get("medium"), ALPHA_MAX * mediumWeightLocal / (double)largeWeightLocal, ALPHA_LOW* mediumWeightLocal / (double)largeWeightLocal));
+        largeWeightLocal = (int) (largeWeightLocal * ratioA(Constants.activeThreadCount.get("large"), ALPHA_MAX , ALPHA_LOW));
 
 
         int targetMachine = 2;
