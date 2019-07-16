@@ -2,6 +2,8 @@ package com.aliware.tianchi.strategy;
 
 import com.aliware.tianchi.Constants;
 import org.apache.dubbo.common.URL;
+import org.apache.dubbo.common.logger.Logger;
+import org.apache.dubbo.common.logger.LoggerFactory;
 import org.apache.dubbo.rpc.Invocation;
 
 import java.util.Date;
@@ -13,6 +15,8 @@ import java.util.PriorityQueue;
  * Time: 2019-07-15 16:30:53
  */
 public class AResStrategy extends AbstractStrategy {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AResStrategy.class);
+
 
     private static AResStrategy strategy = new AResStrategy();
 
@@ -52,14 +56,14 @@ public class AResStrategy extends AbstractStrategy {
         double result = queue.poll();
 
         if (result == k1) {
-            System.out.println(new Date().getTime() + ":small:" + (Constants.activeThreadCount.get("small") + ":" + Constants.longAdderSmall.longValue()));
+            LOGGER.info(new Date().getTime() + ":small:" + (Constants.activeThreadCount.get("small") + ":" + Constants.longAdderSmall.longValue()));
             return 0;
         }
         if (result == k2) {
-            System.out.println(new Date().getTime() + ":medium:" + Constants.activeThreadCount.get("medium") + ":" + Constants.longAdderMedium.longValue());
+            LOGGER.info(new Date().getTime() + ":medium:" + Constants.activeThreadCount.get("medium") + ":" + Constants.longAdderMedium.longValue());
             return 1;
         }
-        System.out.println(new Date().getTime() + ":large:" + (Constants.activeThreadCount.get("large") + ":" + Constants.longAdderLarge.longValue()));
+        LOGGER.info(new Date().getTime() + ":large:" + (Constants.activeThreadCount.get("large") + ":" + Constants.longAdderLarge.longValue()));
         return 2;
     }
 }
