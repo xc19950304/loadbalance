@@ -62,9 +62,17 @@ public class DynamicWeightStrategy implements UserLoadBalanceStrategy {
 
     private int largeWeight = LARGE_INIT_WEIGHT;
 
-    private static final int GRAB_NUM = (int)(TOTAL_INIT_WEIGHT * 0.03 / 3);
+    // 活跃门槛
+    private static final int ALPHA = 100;
 
-    private static final int ALPHA = 9;
+    // 权重抢占参数
+    private static final int GRAB_NUM = (int) (TOTAL_INIT_WEIGHT * 0.04);
+
+    // 权重平滑过渡参数
+    private static final int BETA = 1;
+
+    // 权重调整滑动窗口时间 单位毫秒
+    private static final int SLIDING_WINDOW_TIME = 100;
 
     private HashMap<Integer, Integer> numberMap = new HashMap<>();
 
@@ -94,7 +102,7 @@ public class DynamicWeightStrategy implements UserLoadBalanceStrategy {
         timer.scheduleAtFixedRate(new TimerTask() {
             public void run() {
 
-                if (IS_DEBUG){
+                if (IS_DEBUG) {
                     numberMap.put(NUM_TOTAL, numberMap.get(NUM_SMALL) + numberMap.get(NUM_MEDIUM) + numberMap.get(NUM_LARGE));
                     System.out.println(
                             " NUM_SMALL: " + numberMap.get(NUM_SMALL) +
@@ -106,7 +114,7 @@ public class DynamicWeightStrategy implements UserLoadBalanceStrategy {
                                     " D_LARGE: " + (numberMap.get(NUM_LARGE) - numberMap.get(NUM_LARGE_OLD)) +
                                     " D_TOTAL: " + (numberMap.get(NUM_TOTAL) - numberMap.get(NUM_TOTAL_OLD))
                     );
-                    System.out.println("GRAB_NUM: " + GRAB_NUM + " GATE_NUM: " + GRAB_NUM * ALPHA + " SMALL_WEIGHT: " + smallWeight + " MEDIUM_WEIGHT: " + mediumWeight + " LARGE_WEIGHT: " + largeWeight);
+                    System.out.println("GRAB_NUM: " + GRAB_NUM + " GATE_NUM: " + GRAB_NUM * BETA + " SMALL_WEIGHT: " + smallWeight + " MEDIUM_WEIGHT: " + mediumWeight + " LARGE_WEIGHT: " + largeWeight);
                     numberMap.put(NUM_SMALL_OLD, numberMap.get(NUM_SMALL));
                     numberMap.put(NUM_MEDIUM_OLD, numberMap.get(NUM_MEDIUM));
                     numberMap.put(NUM_LARGE_OLD, numberMap.get(NUM_LARGE));
@@ -116,7 +124,7 @@ public class DynamicWeightStrategy implements UserLoadBalanceStrategy {
                 weightChange();
 
             }
-        }, 100, 100);
+        }, SLIDING_WINDOW_TIME, SLIDING_WINDOW_TIME);
     }
 
     @Override
@@ -126,7 +134,7 @@ public class DynamicWeightStrategy implements UserLoadBalanceStrategy {
         return targetMachine;
     }
 
-    private int getTargetMachineA(){
+    private int getTargetMachineA() {
         Random rand = new Random();
 
         int targetMachine = 2;
@@ -139,7 +147,40 @@ public class DynamicWeightStrategy implements UserLoadBalanceStrategy {
         return targetMachine;
     }
 
-    private void weightChange(){
+    private int getTargetMachineB() {
+
+
+        int smallWeightLocal = this.smallWeight;
+        int mediumWeightLocal = this.mediumWeight;
+        int largeWeightLocal = this.largeWeight;
+
+        // 低活跃门槛保护
+        if (Constants.activeThreadCount.get("small") < ALPHA * smallWeightLocal / largeWeightLocal) {
+            smallWeightLocal = smallWeightLocal / 2;
+        }
+
+        if (Constants.activeThreadCount.get("medium") < ALPHA * mediumWeightLocal / largeWeightLocal) {
+            mediumWeightLocal = mediumWeightLocal / 2;
+        }
+
+        if (Constants.activeThreadCount.get("large") < ALPHA) {
+            largeWeightLocal = largeWeightLocal / 2;
+        }
+
+
+        int targetMachine = 2;
+        Random rand = new Random();
+        int randNumber = rand.nextInt(smallWeightLocal + mediumWeightLocal + largeWeightLocal);
+        if (randNumber < smallWeightLocal) {
+            targetMachine = 0;
+        } else if (randNumber < smallWeightLocal + mediumWeightLocal) {
+            targetMachine = 1;
+        }
+        return targetMachine;
+    }
+
+
+    private void weightChange() {
         // 避免线程冲突
         int smallWeightLocal = this.smallWeight;
         int mediumWeightLocal = this.mediumWeight;
@@ -147,52 +188,39 @@ public class DynamicWeightStrategy implements UserLoadBalanceStrategy {
 
         // 抢占权重
         int grabTotal = 0;
-        if (smallWeightLocal > ALPHA * GRAB_NUM){
+        if (smallWeightLocal > BETA * GRAB_NUM) {
             smallWeightLocal = smallWeightLocal - GRAB_NUM;
             grabTotal += GRAB_NUM;
         }
 
-        if (mediumWeightLocal > ALPHA * GRAB_NUM){
+        if (mediumWeightLocal > BETA * GRAB_NUM) {
             mediumWeightLocal = mediumWeightLocal - GRAB_NUM;
             grabTotal += GRAB_NUM;
         }
 
-        if (largeWeightLocal > ALPHA * GRAB_NUM){
+        if (largeWeightLocal > BETA * GRAB_NUM) {
             grabTotal += GRAB_NUM;
         }
 
         int totalActive = Constants.activeThreadCount.get("small") + Constants.activeThreadCount.get("medium") + Constants.activeThreadCount.get("large");
-        double smallRatio = Constants.activeThreadCount.get("small") / (double)totalActive;
-        double mediumRatio = Constants.activeThreadCount.get("medium") / (double)totalActive;
-        smallWeightLocal = (int) (smallWeightLocal + grabTotal* smallRatio);
-        mediumWeightLocal = (int) (mediumWeightLocal + grabTotal* mediumRatio);
+        double smallRatio = Constants.activeThreadCount.get("small") / (double) totalActive;
+        double mediumRatio = Constants.activeThreadCount.get("medium") / (double) totalActive;
+        smallWeightLocal = (int) (smallWeightLocal + grabTotal * smallRatio);
+        mediumWeightLocal = (int) (mediumWeightLocal + grabTotal * mediumRatio);
         largeWeightLocal = TOTAL_INIT_WEIGHT - smallWeightLocal - mediumWeightLocal;
 
-        if (smallWeightLocal != this.smallWeight){
+        if (smallWeightLocal != this.smallWeight) {
             this.write(smallWeightLocal, mediumWeightLocal, largeWeightLocal);
         }
 
     }
 
-    private int getTargetMachineB(){
-        int targetMachine = 2;
 
-        Random rand = new Random();
-        int randNumber = rand.nextInt(TOTAL_INIT_WEIGHT);
-        if (randNumber < this.smallWeight) {
-            targetMachine = 0;
-        } else if (randNumber < this.smallWeight + this.mediumWeight) {
-            targetMachine = 1;
-        }
-        return targetMachine;
-    }
-
-    private void write(int smallWeight, int mediumWeight, int largeWeight){
+    private void write(int smallWeight, int mediumWeight, int largeWeight) {
         this.smallWeight = smallWeight;
         this.mediumWeight = mediumWeight;
         this.largeWeight = largeWeight;
     }
-
 
 
 }
