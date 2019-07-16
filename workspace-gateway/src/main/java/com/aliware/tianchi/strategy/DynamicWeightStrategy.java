@@ -63,7 +63,9 @@ public class DynamicWeightStrategy implements UserLoadBalanceStrategy {
     private int largeWeight = LARGE_INIT_WEIGHT;
 
     // 活跃门槛
-    private static final int ALPHA = 100;
+    private static final int ALPHA_MAX = 80;
+
+    private static final int ALPHA_LOW = 10;
 
     // 权重抢占参数
     private static final int GRAB_NUM = (int) (TOTAL_INIT_WEIGHT * 0.04);
@@ -155,17 +157,9 @@ public class DynamicWeightStrategy implements UserLoadBalanceStrategy {
         int largeWeightLocal = this.largeWeight;
 
         // 低活跃门槛保护
-        if (Constants.activeThreadCount.get("small") < ALPHA * smallWeightLocal / largeWeightLocal) {
-            smallWeightLocal = smallWeightLocal / 2;
-        }
-
-        if (Constants.activeThreadCount.get("medium") < ALPHA * mediumWeightLocal / largeWeightLocal) {
-            mediumWeightLocal = mediumWeightLocal / 2;
-        }
-
-        if (Constants.activeThreadCount.get("large") < ALPHA) {
-            largeWeightLocal = largeWeightLocal / 2;
-        }
+        smallWeightLocal = (int) (smallWeightLocal * ratioB(Constants.activeThreadCount.get("small"), ALPHA_MAX * smallWeightLocal / (double)largeWeightLocal, ALPHA_LOW* smallWeightLocal / (double)largeWeightLocal));
+        mediumWeightLocal = (int) (mediumWeightLocal * ratioB(Constants.activeThreadCount.get("small"), ALPHA_MAX * mediumWeightLocal / (double)largeWeightLocal, ALPHA_LOW* mediumWeightLocal / (double)largeWeightLocal));
+        largeWeightLocal = (int) (largeWeightLocal * ratioB(Constants.activeThreadCount.get("small"), ALPHA_MAX , ALPHA_LOW));
 
 
         int targetMachine = 2;
@@ -202,6 +196,7 @@ public class DynamicWeightStrategy implements UserLoadBalanceStrategy {
             grabTotal += GRAB_NUM;
         }
 
+        // 分配权重
         int totalActive = Constants.activeThreadCount.get("small") + Constants.activeThreadCount.get("medium") + Constants.activeThreadCount.get("large");
         double smallRatio = Constants.activeThreadCount.get("small") / (double) totalActive;
         double mediumRatio = Constants.activeThreadCount.get("medium") / (double) totalActive;
@@ -209,6 +204,7 @@ public class DynamicWeightStrategy implements UserLoadBalanceStrategy {
         mediumWeightLocal = (int) (mediumWeightLocal + grabTotal * mediumRatio);
         largeWeightLocal = TOTAL_INIT_WEIGHT - smallWeightLocal - mediumWeightLocal;
 
+        // 写出权重，不管线程如何抢占，始终保持总值稳定
         if (smallWeightLocal != this.smallWeight) {
             this.write(smallWeightLocal, mediumWeightLocal, largeWeightLocal);
         }
@@ -222,5 +218,22 @@ public class DynamicWeightStrategy implements UserLoadBalanceStrategy {
         this.largeWeight = largeWeight;
     }
 
+    private double ratioA(double activeNum, double max, double min){
+        if (activeNum > max){
+            return 1;
+        }else if (activeNum < min){
+            return 0;
+        }
+        return - Math.pow((activeNum - max), 2) / Math.pow((max - min), 2) + 1;
+    }
+
+    private double ratioB(double activeNum, double max, double min){
+        if (activeNum > max){
+            return 1;
+        }else if (activeNum < min){
+            return 0;
+        }
+        return (activeNum - max)/ (max - min) + 1;
+    }
 
 }
