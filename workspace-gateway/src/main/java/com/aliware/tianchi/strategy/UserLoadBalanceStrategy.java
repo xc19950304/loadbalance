@@ -15,6 +15,4 @@ public interface UserLoadBalanceStrategy {
 
     int select(URL url, Invocation invocation);
 
-
-
 }

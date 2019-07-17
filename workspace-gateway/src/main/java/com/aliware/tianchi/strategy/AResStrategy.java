@@ -12,7 +12,6 @@ import org.apache.dubbo.rpc.Invocation;
  * Time: 2019-07-15 16:30:53
  */
 public class AResStrategy extends AbstractStrategy {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AResStrategy.class);
 
 
     private static AResStrategy strategy = new AResStrategy();
@@ -21,26 +20,18 @@ public class AResStrategy extends AbstractStrategy {
         return strategy;
     }
 
-    public static AResStrategy getInstance(String dataFrom) {
-        strategy.dataFrom = dataFrom;
-        return strategy;
-    }
 
     @Override
     public int select(URL url, Invocation invocation) {
-        int smallActiveCount;
-        int mediumActiveCount;
-        int largeActiveCount;
 
-        if (dataFrom.equals("client")) {
-            smallActiveCount = (int) Constants.longAdderSmall.longValue() == 0 ? 1 : (int) Constants.longAdderSmall.longValue();
-            mediumActiveCount = (int) Constants.longAdderMedium.longValue() == 0 ? 1 : (int) Constants.longAdderMedium.longValue();
-            largeActiveCount = (int) Constants.longAdderLarge.longValue() == 0 ? 1 : (int) Constants.longAdderLarge.longValue();
-        } else {
-            smallActiveCount = Constants.activeThreadCount.get("small");
-            mediumActiveCount = Constants.activeThreadCount.get("medium");
-            largeActiveCount = Constants.activeThreadCount.get("large");
-        }
+        int smallActiveCount = (int) Constants.longAdderSmall.longValue();
+        int mediumActiveCount = (int) Constants.longAdderMedium.longValue();
+        int largeActiveCount = (int) Constants.longAdderLarge.longValue();
+
+
+        smallActiveCount =  smallActiveCount == 0 ? 1 : smallActiveCount;
+        mediumActiveCount = mediumActiveCount == 0 ? 1 : mediumActiveCount;
+        largeActiveCount = largeActiveCount == 0 ? 1 : largeActiveCount;
 
         double k1 = Math.log(rand.nextDouble()) / (smallActiveCount * 1);
         double k2 = Math.log(rand.nextDouble()) / (mediumActiveCount * 1.5);
