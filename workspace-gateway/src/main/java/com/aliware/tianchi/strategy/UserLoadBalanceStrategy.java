@@ -2,9 +2,6 @@ package com.aliware.tianchi.strategy;
 
 import org.apache.dubbo.common.URL;
 import org.apache.dubbo.rpc.Invocation;
-import org.apache.dubbo.rpc.Invoker;
-
-import java.util.List;
 
 /**
  * Author: eamon

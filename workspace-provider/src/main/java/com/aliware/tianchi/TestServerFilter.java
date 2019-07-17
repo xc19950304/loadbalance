@@ -1,7 +1,6 @@
 package com.aliware.tianchi;
 
 import org.apache.dubbo.common.Constants;
-import org.apache.dubbo.common.URL;
 import org.apache.dubbo.common.extension.Activate;
 import org.apache.dubbo.rpc.Filter;
 import org.apache.dubbo.rpc.Invocation;

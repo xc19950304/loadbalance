@@ -3,11 +3,7 @@ package com.aliware.tianchi;
 import org.apache.dubbo.common.Constants;
 import org.apache.dubbo.common.URL;
 import org.apache.dubbo.common.extension.Activate;
-import org.apache.dubbo.common.logger.Logger;
-import org.apache.dubbo.common.logger.LoggerFactory;
 import org.apache.dubbo.rpc.*;
-
-import java.util.Date;
 
 import static com.aliware.tianchi.Constants.*;
 

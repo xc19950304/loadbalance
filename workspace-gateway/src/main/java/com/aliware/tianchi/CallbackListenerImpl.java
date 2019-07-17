@@ -2,9 +2,6 @@ package com.aliware.tianchi;
 
 import org.apache.dubbo.rpc.listener.CallbackListener;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static com.aliware.tianchi.Constants.*;
 
 /**

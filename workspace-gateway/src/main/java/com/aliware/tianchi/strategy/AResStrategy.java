@@ -2,8 +2,6 @@ package com.aliware.tianchi.strategy;
 
 import com.aliware.tianchi.Constants;
 import org.apache.dubbo.common.URL;
-import org.apache.dubbo.common.logger.Logger;
-import org.apache.dubbo.common.logger.LoggerFactory;
 import org.apache.dubbo.rpc.Invocation;
 
 /**
