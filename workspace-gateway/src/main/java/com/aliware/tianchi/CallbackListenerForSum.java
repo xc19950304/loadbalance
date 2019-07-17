@@ -2,13 +2,11 @@ package com.aliware.tianchi;
 
 import org.apache.dubbo.rpc.listener.CallbackListener;
 
-import static com.aliware.tianchi.Constants.*;
-
 public class CallbackListenerForSum implements CallbackListener {
     @Override
     public void receiveServerMsg(String msg) {
         //System.out.println("CallbackListenerForSum接受到数据："+ msg);
-        if (threadCountInit)
+        /*if (threadCountInit)
             return;
         synchronized (this) {
             if (threadCountInit) return;
@@ -38,8 +36,8 @@ public class CallbackListenerForSum implements CallbackListener {
                 threadCountInit = true;
 
                 //System.out.println("threadCountInit = true");
-            }
-        }
+            }*/
+//        }
 
     }
 }

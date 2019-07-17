@@ -1,5 +1,7 @@
 package com.aliware.tianchi;
 
+import org.apache.dubbo.config.ProtocolConfig;
+import org.apache.dubbo.config.context.ConfigManager;
 import org.apache.dubbo.rpc.listener.CallbackListener;
 import org.apache.dubbo.rpc.service.CallbackService;
 
@@ -41,12 +43,12 @@ public class CallbackServiceImpl implements CallbackService {
 //            }
 //        }, 0, 10);
 
-        sumThreadTimer.schedule(new TimerTask() {
+        /*sumThreadTimer.schedule(new TimerTask() {
             @Override
             public void run() {
                 if (!listeners.isEmpty()) {
                     for (Map.Entry<String, CallbackListener> entry : listeners.entrySet()) {
-                        if("callbacklistenerforsum".equals(entry.getKey())) {
+                        if ("callbacklistenerforsum".equals(entry.getKey())) {
                             try {
                                 String env = System.getProperty("quota");
                                 if (env.equals("small")) {
@@ -64,11 +66,11 @@ public class CallbackServiceImpl implements CallbackService {
                 }
 
             }
-        }, 0,1000);
+        }, 0, 1000);*/
     }
 
-    private Timer timer = new Timer();
-    private Timer sumThreadTimer = new Timer();
+/*    private Timer timer = new Timer();
+    private Timer sumThreadTimer = new Timer();*/
 
     /**
      * key: listener type
@@ -79,6 +81,10 @@ public class CallbackServiceImpl implements CallbackService {
     @Override
     public void addListener(String key, CallbackListener listener) {
         listeners.put(key, listener);
-//        listener.receiveServerMsg(String.valueOf(Constants.threadLocal.get())); // send notification for change
+        Map<String, ProtocolConfig> protocolMap = ConfigManager.getInstance().getProtocols();
+        String env = System.getProperty("quota");
+        ProtocolConfig protocolConfig = protocolMap.get("dubbo");
+        int threadCount = protocolConfig.getThreads();
+        listener.receiveServerMsg(env + ":" + threadCount);
     }
 }

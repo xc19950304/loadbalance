@@ -21,7 +21,7 @@ public class TestRequestLimiter implements RequestLimiter {
      */
     @Override
     public boolean tryAcquire(Request request, int activeTaskCount) {
-        String env = System.getProperty("quota");
+       /* String env = System.getProperty("quota");
         if (env.equals("small")) {
             if (Constants.threadSmallTotal == 0) return true;
             Constants.threadSmall = (Constants.threadSmallTotal - activeTaskCount);
@@ -37,7 +37,7 @@ public class TestRequestLimiter implements RequestLimiter {
             Constants.threadLarge = (Constants.threadLargeTotal - activeTaskCount);
             if(Constants.threadLarge <= 0)
                 return false;
-        }
+        }*/
         return true;
     }
 

@@ -2,7 +2,10 @@ package com.aliware.tianchi;
 
 import org.apache.dubbo.rpc.listener.CallbackListener;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.aliware.tianchi.Constants.*;
 
 /**
  * @author daofeng.xjf
@@ -33,7 +36,7 @@ public class CallbackListenerImpl implements CallbackListener {
 //        }
     }
 
-    @Override
+/*    @Override
     public void receiveServerMsg(String msg) {
         String[] data = msg.split(":");
         int data_old = Constants.activeThreadCount.get(data[0]);
@@ -43,6 +46,43 @@ public class CallbackListenerImpl implements CallbackListener {
         }
         Constants.activeThreadCount.put(data[0] + "_old", data_old);
         Constants.activeThreadCount.put(data[0], Integer.parseInt(data[1]));
-    }
+    }*/
 
+
+    @Override
+    public void receiveServerMsg(String msg) {
+        if (threadCountInit)
+            return;
+        synchronized (this) {
+            if (threadCountInit) return;
+            String[] threadSum = msg.split(":");
+            switch (threadSum[0]) {
+                case "small":
+                    smallProducerThreadSum = Integer.parseInt(threadSum[1]);
+                    break;
+                case "medium":
+                    mediumProducerThreadSum = Integer.parseInt(threadSum[1]);
+                    break;
+                case "large":
+                    largeProducerThreadSum = Integer.parseInt(threadSum[1]);
+                    break;
+            }
+            if (smallProducerThreadSum != 0 && mediumProducerThreadSum != 0 && largeProducerThreadSum != 0) {
+                //线程参数初始化(采用服务端传值)
+                activeThreadCount.put("small", smallProducerThreadSum);
+                activeThreadCount.put("medium", mediumProducerThreadSum);
+                activeThreadCount.put("large", largeProducerThreadSum);
+
+                longAdderLarge.add(largeProducerThreadSum);
+                longAdderMedium.add(mediumProducerThreadSum);
+                longAdderSmall.add(smallProducerThreadSum);
+
+                //线程参数初始化(直接在gateway统计)
+                threadCountInit = true;
+
+                //System.out.println("threadCountInit = true");
+            }
+        }
+
+    }
 }

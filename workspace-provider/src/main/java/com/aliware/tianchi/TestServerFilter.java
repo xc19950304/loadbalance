@@ -35,19 +35,19 @@ public class TestServerFilter implements Filter {
 
     @Override
     public Result onResponse(Result result, Invoker<?> invoker, Invocation invocation) {
-        if(!init){
-            URL url=invoker.getUrl();
-            int port = url.getPort();
-            int total=url.getParameter("threads",0);
-            if (port==20880){
-                com.aliware.tianchi.Constants.threadSmallTotal=total;
-            }else if(port==20870){
-                com.aliware.tianchi.Constants.threadMediumTotal=total;
-            }else {
-                com.aliware.tianchi.Constants.threadLargeTotal=total;
-            }
-            init=true;
-        }
+//        if(!init){
+//            URL url=invoker.getUrl();
+//            int port = url.getPort();
+//            int total=url.getParameter("threads",0);
+//            if (port==20880){
+//                com.aliware.tianchi.Constants.threadSmallTotal=total;
+//            }else if(port==20870){
+//                com.aliware.tianchi.Constants.threadMediumTotal=total;
+//            }else {
+//                com.aliware.tianchi.Constants.threadLargeTotal=total;
+//            }
+//            init=true;
+//        }
         return result;
     }
 

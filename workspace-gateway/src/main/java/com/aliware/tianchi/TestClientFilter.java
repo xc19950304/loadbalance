@@ -29,18 +29,24 @@ public class TestClientFilter implements Filter {
         }
         try {
             //startTime = System.currentTimeMillis();
-/*            System.out.println("invoke large: " + longAdderLarge.longValue());
+  /*          System.out.println("invoke large: " + longAdderLarge.longValue());
             System.out.println("invoke medium: " + longAdderMedium.longValue());
             System.out.println("invoke small: " + longAdderSmall.longValue());*/
             URL url = invoker.getUrl();
             int port = url.getPort();
             if (port == 20880) {
+                if(longAdderSmall.longValue() <= 0)
+                    return new RpcResult();
                 longAdderSmall.decrement();
 //                LOGGER.info(new Date().getTime() + ":small:" + (com.aliware.tianchi.Constants.activeThreadCount.get("small") + ":" + com.aliware.tianchi.Constants.longAdderSmall.longValue()));
             } else if (port == 20870) {
+                if(longAdderMedium.longValue() <= 0)
+                    return new RpcResult();
                 longAdderMedium.decrement();
 //                LOGGER.info(new Date().getTime() + ":medium:" + com.aliware.tianchi.Constants.activeThreadCount.get("medium") + ":" + com.aliware.tianchi.Constants.longAdderMedium.longValue());
             } else {
+                if(longAdderLarge.longValue() <= 0)
+                    return new RpcResult();
                 longAdderLarge.decrement();
 //                LOGGER.info(new Date().getTime() + ":large:" + (com.aliware.tianchi.Constants.activeThreadCount.get("large") + ":" + com.aliware.tianchi.Constants.longAdderLarge.longValue()));
             }
