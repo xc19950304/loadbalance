@@ -7,6 +7,8 @@ import org.apache.dubbo.common.logger.Logger;
 import org.apache.dubbo.common.logger.LoggerFactory;
 import org.apache.dubbo.rpc.*;
 
+import java.util.Date;
+
 import static com.aliware.tianchi.Constants.*;
 
 /**
@@ -23,6 +25,7 @@ public class TestClientFilter implements Filter {
     //long startTime = 0;
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
+//        return new RpcResult();
         if (!threadCountInit) {
             Result result = invoker.invoke(invocation);
             return result;
@@ -35,17 +38,17 @@ public class TestClientFilter implements Filter {
             URL url = invoker.getUrl();
             int port = url.getPort();
             if (port == 20880) {
-                if(longAdderSmall.longValue() <= 0)
+                if (longAdderSmall.longValue() <= 0)
                     return new RpcResult();
                 longAdderSmall.decrement();
 //                LOGGER.info(new Date().getTime() + ":small:" + (com.aliware.tianchi.Constants.activeThreadCount.get("small") + ":" + com.aliware.tianchi.Constants.longAdderSmall.longValue()));
             } else if (port == 20870) {
-                if(longAdderMedium.longValue() <= 0)
+                if (longAdderMedium.longValue() <= 0)
                     return new RpcResult();
                 longAdderMedium.decrement();
 //                LOGGER.info(new Date().getTime() + ":medium:" + com.aliware.tianchi.Constants.activeThreadCount.get("medium") + ":" + com.aliware.tianchi.Constants.longAdderMedium.longValue());
             } else {
-                if(longAdderLarge.longValue() <= 0)
+                if (longAdderLarge.longValue() <= 0)
                     return new RpcResult();
                 longAdderLarge.decrement();
 //                LOGGER.info(new Date().getTime() + ":large:" + (com.aliware.tianchi.Constants.activeThreadCount.get("large") + ":" + com.aliware.tianchi.Constants.longAdderLarge.longValue()));
@@ -63,6 +66,9 @@ public class TestClientFilter implements Filter {
         // long endTime = System.currentTimeMillis();
         //System.out.println( "request time : " +(endTime - startTime));
         if (!threadCountInit) {
+            return result;
+        }
+        if (result.getResult() == null) {
             return result;
         }
         URL url = invoker.getUrl();
