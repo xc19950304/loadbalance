@@ -2,21 +2,12 @@ package com.aliware.tianchi;
 
 import com.aliware.tianchi.policy.BaseConfig;
 import org.apache.dubbo.common.extension.ExtensionLoader;
-import org.apache.dubbo.config.ApplicationConfig;
-import org.apache.dubbo.config.ArgumentConfig;
-import org.apache.dubbo.config.MethodConfig;
-import org.apache.dubbo.config.ProtocolConfig;
-import org.apache.dubbo.config.RegistryConfig;
-import org.apache.dubbo.config.ServiceConfig;
+import org.apache.dubbo.config.*;
 import org.apache.dubbo.rpc.service.CallbackService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author guohaoice@gmail.com

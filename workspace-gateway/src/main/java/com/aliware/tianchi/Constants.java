@@ -15,12 +15,12 @@ public class Constants {
     public static LongAdder longAdderSmall = new LongAdder();
 
     //初始总线程数是否初始化
-    public static Boolean threadCountInit = false;
+    public static volatile Boolean threadCountInit = false;
 
     //初始总线程数
-    public static int smallProducerThreadSum = 0;
-    public static int mediumProducerThreadSum = 0;
-    public static int largeProducerThreadSum = 0;
+    public static volatile int smallProducerThreadSum = 0;
+    public static volatile int mediumProducerThreadSum = 0;
+    public static volatile int largeProducerThreadSum = 0;
 
     static {
         longAdderLarge.add(0);

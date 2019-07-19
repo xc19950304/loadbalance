@@ -36,7 +36,7 @@ public class HttpProcessHandler extends SimpleChannelInboundHandler<FullHttpRequ
     private volatile boolean init = false;
     private HashInterface hashInterface;
     private InitProviderService initService = new InitProviderService();
-    private String salt = System.getProperty("salt");
+        private String salt = System.getProperty("salt");
 
     HttpProcessHandler() {
         this.hashInterface = getServiceStub();

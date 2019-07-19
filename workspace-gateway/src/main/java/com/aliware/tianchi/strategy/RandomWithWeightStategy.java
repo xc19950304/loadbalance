@@ -18,26 +18,13 @@ public class RandomWithWeightStategy extends AbstractStrategy {
         return strategy;
     }
 
-    public static UserLoadBalanceStrategy getInstance(String dataFrom) {
-        strategy.dataFrom = dataFrom;
-        return strategy;
-    }
 
     @Override
     public int select(URL url, Invocation invocation) {
-        int smallActiveCount;
-        int mediumActiveCount;
-        int largeActiveCount;
 
-        if (dataFrom.equals("client")) {
-            smallActiveCount = (int) Constants.longAdderSmall.longValue();
-            mediumActiveCount = (int) Constants.longAdderMedium.longValue();
-            largeActiveCount = (int) Constants.longAdderLarge.longValue();
-        } else {
-            smallActiveCount = Constants.activeThreadCount.get("small");
-            mediumActiveCount = Constants.activeThreadCount.get("medium");
-            largeActiveCount = Constants.activeThreadCount.get("large");
-        }
+        int smallActiveCount = (int) Constants.longAdderSmall.longValue() * 1;
+        int mediumActiveCount = (int) Constants.longAdderMedium.longValue() * 2;
+        int largeActiveCount = (int) Constants.longAdderLarge.longValue() * 3;
 
         int randNumber = rand.nextInt(smallActiveCount + mediumActiveCount + largeActiveCount);
         if (randNumber < smallActiveCount) {

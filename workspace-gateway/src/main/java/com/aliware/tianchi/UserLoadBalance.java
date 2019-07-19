@@ -2,6 +2,7 @@ package com.aliware.tianchi;
 
 import com.aliware.tianchi.strategy.AResStrategy;
 import com.aliware.tianchi.strategy.RandomStrategy;
+import com.aliware.tianchi.strategy.RandomWithWeightStategy;
 import com.aliware.tianchi.strategy.UserLoadBalanceStrategy;
 import org.apache.dubbo.common.URL;
 import org.apache.dubbo.rpc.Invocation;
@@ -31,11 +32,9 @@ public class UserLoadBalance implements LoadBalance {
             strategy = RandomStrategy.getInstance();
             //System.out.println("随机算法");
         } else {
-            strategy = AResStrategy.getInstance();
+            strategy = RandomWithWeightStategy.getInstance();
             //System.out.println("AResStrategy权重算法");
         }
-
-//        strategy = AResStrategy.getInstance("client");
 
         return invokers.get(strategy.select(url, invocation));
     }
